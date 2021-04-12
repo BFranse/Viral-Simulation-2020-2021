@@ -4,6 +4,7 @@ metadata:
 projects:
   - name: Viral-Simulation-2020-2021
     source:
+      # Test commit
       location: 'https://github.com/BFranse/Viral-Simulation-2020-2021.git'
       type: git
       branch: main

@@ -18,6 +18,10 @@
 #include <iostream>
 #include <emscripten.h>
 #include <math.h>
+#include <stdlib.h> 
+#include "RegularMovementStrategy.h"
+
+RegularMovementStrategy regularMovementStrategy;
 
 namespace corsim
 {
@@ -78,11 +82,18 @@ namespace corsim
 
         for(Subject &subject : _subjects)
         {
+            subject.increaseAliveTime();
             subject.move(dt);
 
             if(subject.infected())
             {
                 numberInfected++;
+            }
+            
+            // Check the alive time against a range to prevent all subjects to start moving at once
+            if(subject.aliveTime() >= (rand() % 200 + 100))
+            {
+                 subject.setMovementStrategy(&regularMovementStrategy);
             }
         }
 

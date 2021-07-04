@@ -91,6 +91,7 @@ namespace corsim
                 numberInfected++;
             }
             
+            // Check the alive time against a range to prevent all subjects to start moving at once
             if(subject.timeAlive() >= (rand() % 600 + 300))
             {
                 subject.setMovementStrategy(&regularMovement);

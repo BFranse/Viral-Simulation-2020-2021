@@ -20,15 +20,23 @@
 #include <math.h>
 #include "html_canvas.h"
 #include "ChartJS_handler.h"
+#include "RegularMovementStrategy.h"
+#include "LockdownMovementStrategy.h"
+
+// Strategies
+RegularMovementStrategy regularMovementStrategy;
+LockdownMovementStrategy lockdownMovementStrategy;
 
 //Constants to control the simulation
 const int SUBJECT_COUNT = 200;
 const int SIM_WIDTH = 800;
 const int SIM_HEIGHT = 500;
 const int SUBJECT_RADIUS = 2;
+const float POPULATION_SPLIT = 0.75;
 
-int main() {
-    corsim::Simulation s(SIM_WIDTH,SIM_HEIGHT,std::make_unique<corsim::HTMLCanvas>(30,150,SIM_WIDTH,SIM_HEIGHT),
+int main() 
+{
+    corsim::Simulation sim(SIM_WIDTH,SIM_HEIGHT,std::make_unique<corsim::HTMLCanvas>(30,150,SIM_WIDTH,SIM_HEIGHT),
         std::make_unique<corsim::ChartJSHandler>());
 
     //Code to randomly generate certain numbers, which is done by using certain distributions
@@ -39,23 +47,33 @@ int main() {
     std::uniform_real_distribution<double> dist_dx(-1.0, 1.0);
     std::uniform_real_distribution<double> dist_dy(-1.0, 1.0);
 
-    for (int i = 0; i<SUBJECT_COUNT; ++i)
+    for (int i = 0; i < SUBJECT_COUNT; ++i)
     {
         double x = dist_w(mt); //Randomly generate x position
         double y = dist_h(mt); //Randomly generate y position
         
-        corsim::Subject su(x,y,SUBJECT_RADIUS,false);
+        corsim::Subject subject(x, y, SUBJECT_RADIUS, false);
 
-        su.set_dx(dist_dx(mt));
-        su.set_dy(dist_dy(mt));
+        subject.set_dx(dist_dx(mt));
+        subject.set_dy(dist_dy(mt));
 
-        if(i == SUBJECT_COUNT-1)
+        // Strategy
+        if(i < SUBJECT_COUNT * POPULATION_SPLIT)
         {
-            su.infect();
+            subject.setMovementStrategy(&lockdownMovementStrategy);
+        }
+        else
+        {
+            subject.setMovementStrategy(&regularMovementStrategy);
         }
 
-        s.add_subject(std::move(su));
+        if(i == SUBJECT_COUNT -1)
+        {
+            subject.infect();
+        }
+
+        sim.add_subject(std::move(subject));
     }  
 
-    s.run();
+    sim.run();
 }

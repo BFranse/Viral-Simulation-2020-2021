@@ -92,6 +92,16 @@ namespace corsim
     {
         return sqrt(_dx * _dx + _dy * _dy);
     }
+    
+    int Subject::timeAlive()
+    {
+        return this->_timeAlive;
+    }
+
+    void Subject::increaseTimeAlive()
+    {
+        this->_timeAlive++;
+    }
 
     void Subject::setMovementStrategy(MovementStrategy *movementStrategy)
     {

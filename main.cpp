@@ -36,8 +36,12 @@ const float POPULATION_SPLIT = 0.75;
 
 int main() 
 {
-    corsim::Simulation sim(SIM_WIDTH,SIM_HEIGHT,std::make_unique<corsim::HTMLCanvas>(30,150,SIM_WIDTH,SIM_HEIGHT),
-        std::make_unique<corsim::ChartJSHandler>());
+    corsim::Simulation sim(
+        SIM_WIDTH,
+        SIM_HEIGHT,
+        std::make_unique<corsim::HTMLCanvas>(30,150,SIM_WIDTH,SIM_HEIGHT),
+        std::make_unique<corsim::ChartJSHandler>()
+    );
 
     //Code to randomly generate certain numbers, which is done by using certain distributions
     std::random_device rd;
